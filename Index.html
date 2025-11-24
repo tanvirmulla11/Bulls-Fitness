@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bulls Fitness India</title>
+    
+    <!-- Tailwind CSS for Styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Three.js for 3D Background -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #050505;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* Custom Selection Color */
+        ::selection {
+            background-color: #FF9933;
+            color: white;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #000;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #FF9933;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+        .animate-marquee {
+            animation: marquee 20s linear infinite;
+        }
+
+        /* Reveal on Scroll Class */
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Glassmorphism Card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.5s ease;
+        }
+        .glass-card:hover {
+            border-color: rgba(255, 153, 51, 0.5);
+            transform: translateY(-8px);
+            box-shadow: 0 10px 40px rgba(255, 153, 51, 0.15);
+        }
+
+        /* Gradient Text */
+        .text-gradient {
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- 3D Background Container -->
+    <div id="canvas-container" class="fixed top-0 left-0 w-full h-full -z-10 bg-gradient-to-b from-[#050505] via-[#0a0a05] to-[#050505]"></div>
+
+    <!-- Navbar -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 py-6">
+        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+            <!-- Logo -->
+            <div class="flex items-center gap-2 cursor-pointer group" onclick="scrollToSection('home')">
+                <div class="relative w-10 h-10 flex items-center justify-center">
+                    <div class="absolute inset-0 bg-orange-600 rounded-lg transform rotate-6 group-hover:rotate-12 transition-transform"></div>
+                    <div class="absolute inset-0 bg-green-600 rounded-lg transform -rotate-3 opacity-80"></div>
+                    <i data-lucide="crown" class="relative z-10 text-white w-6 h-6"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-black tracking-tighter uppercase leading-none">BULLS <span class="text-orange-500">FITNESS</span></h1>
+                    <span class="text-[10px] text-gray-400 tracking-[0.3em] font-bold block">INDIA</span>
+                </div>
+            </div>
+
+            <!-- Desktop Menu -->
+            <div class="hidden xl:flex items-center gap-1 bg-white/5 p-1 rounded-full border border-white/5 backdrop-blur-md">
+                <button onclick="scrollToSection('home')" class="nav-btn px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 text-gray-400 hover:text-white hover:bg-white/5">Home</button>
+                <button onclick="scrollToSection('about')" class="nav-btn px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 text-gray-400 hover:text-white hover:bg-white/5">About</button>
+                <button onclick="scrollToSection('modules')" class="nav-btn px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 text-gray-400 hover:text-white hover:bg-white/5">Modules</button>
+                <button onclick="scrollToSection('pricing')" class="nav-btn px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 text-gray-400 hover:text-white hover:bg-white/5">Plans</button>
+                <button onclick="scrollToSection('schedule')" class="nav-btn px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 text-gray-400 hover:text-white hover:bg-white/5">Schedule</button>
+                <button onclick="scrollToSection('contact')" class="nav-btn px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 text-gray-400 hover:text-white hover:bg-white/5">Contact</button>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button class="xl:hidden p-2 text-white" onclick="toggleMobileMenu()">
+                <i data-lucide="menu"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 z-40 bg-black/95 backdrop-blur-xl flex flex-col items-center justify-center space-y-8 transition-transform duration-500 translate-x-full">
+        <button onclick="scrollToSection('home')" class="text-3xl font-black uppercase tracking-tighter hover:text-orange-500 transition-colors text-white">Home</button>
+        <button onclick="scrollToSection('about')" class="text-3xl font-black uppercase tracking-tighter hover:text-orange-500 transition-colors text-white">About</button>
+        <button onclick="scrollToSection('modules')" class="text-3xl font-black uppercase tracking-tighter hover:text-orange-500 transition-colors text-white">Modules</button>
+        <button onclick="scrollToSection('pricing')" class="text-3xl font-black uppercase tracking-tighter hover:text-orange-500 transition-colors text-white">Plans</button>
+        <button onclick="scrollToSection('schedule')" class="text-3xl font-black uppercase tracking-tighter hover:text-orange-500 transition-colors text-white">Schedule</button>
+        <button onclick="scrollToSection('contact')" class="text-3xl font-black uppercase tracking-tighter hover:text-orange-500 transition-colors text-white">Contact</button>
+        
+        <button class="absolute top-6 right-6 p-4 text-gray-500 hover:text-white" onclick="toggleMobileMenu()">
+            <i data-lucide="x" class="w-8 h-8"></i>
+        </button>
+    </div>
+
+    <!-- Main Content -->
+    <main class="relative z-10">
+        
+        <!-- Hero Section -->
+        <section id="home" class="min-h-[90vh] flex flex-col justify-center px-6 md:px-20 relative pt-20">
+            <div class="max-w-4xl z-10 animate-fade-in-up">
+                <h1 class="text-6xl md:text-9xl font-black italic tracking-tighter mb-6 leading-[0.9]">
+                    <span class="text-gradient bg-gradient-to-r from-orange-500 to-yellow-500 block">UNLEASH</span>
+                    <span class="text-white block">YOUR</span>
+                    <span class="text-gradient bg-gradient-to-r from-green-500 to-emerald-400 block">STRENGTH</span>
+                </h1>
+                <p class="text-2xl md:text-3xl text-gray-300 mb-10 font-light tracking-wide border-l-4 border-orange-500 pl-6">
+                    BULLS FITNESS INDIA <br />
+                    <span class="text-orange-400 font-bold text-lg uppercase tracking-[0.2em]">Desi Strength • Global Standards</span>
+                </p>
+                <div class="flex flex-col sm:flex-row gap-6">
+                    <button onclick="scrollToSection('pricing')" class="px-8 py-3 rounded-full font-bold uppercase tracking-wider transition-all duration-300 transform hover:scale-105 shadow-lg bg-gradient-to-r from-orange-500 to-red-600 text-white hover:shadow-orange-500/40 border border-transparent">
+                        Start @ ₹1499
+                    </button>
+                    <button onclick="scrollToSection('modules')" class="px-8 py-3 rounded-full font-bold uppercase tracking-wider transition-all duration-300 transform hover:scale-105 shadow-lg bg-transparent border border-white/20 text-white hover:bg-white/10">
+                        Explore Modules
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Marquee -->
+        <div class="bg-orange-600/20 border-y border-orange-500/20 overflow-hidden py-3 backdrop-blur-md">
+            <div class="whitespace-nowrap animate-marquee flex gap-12 text-sm font-bold tracking-widest text-orange-200">
+                <span>🔥 JOIN NOW AND GET 20% OFF ANNUAL PLANS</span>
+                <span>•</span>
+                <span>🏋️ NEW POWERLIFTING BATCH STARTS MONDAY</span>
+                <span>•</span>
+                <span>🥗 FREE DIET CONSULTATION WITH GOLD MEMBERSHIP</span>
+                <span>•</span>
+                <span>🇮🇳 PROUDLY BUILDING A FITTER INDIA</span>
+                <span>•</span>
+                <span>🔥 JOIN NOW AND GET 20% OFF ANNUAL PLANS</span>
+                <span>•</span>
+                <span>🏋️ NEW POWERLIFTING BATCH STARTS MONDAY</span>
+            </div>
+        </div>
+
+        <!-- Founder / About Section -->
+        <section id="about" class="px-6 md:px-20 py-20 reveal-on-scroll">
+            <div class="bg-gradient-to-r from-gray-900 to-black border border-white/10 rounded-3xl p-8 md:p-16 relative overflow-hidden">
+                <div class="grid md:grid-cols-2 gap-12 items-center relative z-10">
+                    <div class="order-2 md:order-1">
+                        <div class="inline-block px-4 py-1 rounded-full bg-orange-500/20 border border-orange-500/50 text-orange-400 font-bold text-sm mb-4">
+                            Meet The Head Coach
+                        </div>
+                        <h2 class="text-4xl md:text-5xl font-black italic text-white mb-6">Ajay Bhai</h2>
+                        <p class="text-gray-400 text-lg leading-relaxed mb-6">
+                            "Fitness isn't just about big muscles; it's about the discipline to show up every single day. I started Bulls Fitness with a vision to make every Indian fit, strong, and unstoppable."
+                        </p>
+                        <div class="flex gap-4">
+                            <div class="flex items-center gap-2 text-gray-300"><i data-lucide="trophy" class="text-yellow-500"></i> <span>Mr. District 2018</span></div>
+                            <div class="flex items-center gap-2 text-gray-300"><i data-lucide="award" class="text-blue-500"></i> <span>Certified Trainer</span></div>
+                        </div>
+                    </div>
+                    <div class="order-1 md:order-2 flex justify-center">
+                        <div class="relative w-64 h-80 md:w-80 md:h-96">
+                            <div class="absolute inset-0 bg-gradient-to-tr from-orange-500 to-red-600 rounded-3xl transform rotate-6 opacity-80"></div>
+                            <div class="absolute inset-0 bg-gray-800 rounded-3xl border-2 border-white/20 overflow-hidden flex items-end justify-center">
+                                <img src="hero2.png"></img>
+                                <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+                                <div class="absolute bottom-4 text-center w-full">
+                                    <p class="text-white font-bold text-xl uppercase tracking-widest">Ajay Bhai</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modules Section -->
+        <section id="modules" class="px-6 md:px-20 py-20 reveal-on-scroll">
+            <div class="text-center mb-16 px-4">
+                <h2 class="text-4xl md:text-6xl font-black italic uppercase text-gradient bg-gradient-to-r from-orange-400 via-white to-green-400 mb-6 drop-shadow-lg">Training Modules</h2>
+                <p class="text-gray-300 max-w-2xl mx-auto text-lg tracking-wide">Specialized programs designed for rapid results.</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Module 1 -->
+                <div class="glass-card p-8 rounded-2xl relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-white/5 to-transparent rounded-bl-full"></div>
+                    <div class="w-14 h-14 bg-white/10 rounded-xl flex items-center justify-center mb-6 text-white border border-white/10 shadow-inner">
+                        <i data-lucide="flame" class="text-orange-500"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3">Fat Loss & Shred</h3>
+                    <p class="text-gray-400 leading-relaxed">High intensity cardio mixed with strength training to burn calories.</p>
+                </div>
+                <!-- Module 2 -->
+                <div class="glass-card p-8 rounded-2xl relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-white/5 to-transparent rounded-bl-full"></div>
+                    <div class="w-14 h-14 bg-white/10 rounded-xl flex items-center justify-center mb-6 text-white border border-white/10 shadow-inner">
+                        <i data-lucide="dumbbell" class="text-red-500"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3">Muscle Building</h3>
+                    <p class="text-gray-400 leading-relaxed">Hypertrophy focused training for maximum gains.</p>
+                </div>
+                <!-- Module 3 -->
+                <div class="glass-card p-8 rounded-2xl relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-white/5 to-transparent rounded-bl-full"></div>
+                    <div class="w-14 h-14 bg-white/10 rounded-xl flex items-center justify-center mb-6 text-white border border-white/10 shadow-inner">
+                        <i data-lucide="activity" class="text-green-500"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3">Flexibility & Rehab</h3>
+                    <p class="text-gray-400 leading-relaxed">Injury prevention, yoga, and recovery modules.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section (4 Cards Only) -->
+        <section id="services" class="px-6 md:px-20 py-20 bg-white/5 backdrop-blur-sm reveal-on-scroll">
+            <div class="text-center mb-16 px-4">
+                <h2 class="text-4xl md:text-6xl font-black italic uppercase text-gradient bg-gradient-to-r from-orange-400 via-white to-green-400 mb-6 drop-shadow-lg">Our Disciplines</h2>
+                <p class="text-gray-300 max-w-2xl mx-auto text-lg tracking-wide">Everything you need to build the ultimate physique.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Service 1 -->
+                <div class="glass-card p-8 rounded-2xl group bg-black/40 relative overflow-hidden">
+                    <div class="w-16 h-16 rounded-full bg-orange-600/20 flex items-center justify-center text-orange-400 mb-6 group-hover:scale-110 transition-all duration-300">
+                        <i data-lucide="users" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Personal Training</h3>
+                    <p class="text-gray-400 leading-relaxed mb-6">Expert guidance tailored to your body type.</p>
+                    <div class="w-12 h-1 bg-gradient-to-r from-orange-500 to-red-600 rounded-full group-hover:w-full transition-all duration-500"></div>
+                </div>
+                <!-- Service 2 -->
+                <div class="glass-card p-8 rounded-2xl group bg-black/40 relative overflow-hidden">
+                    <div class="w-16 h-16 rounded-full bg-orange-600/20 flex items-center justify-center text-orange-400 mb-6 group-hover:scale-110 transition-all duration-300">
+                        <i data-lucide="dumbbell" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Heavy Lifting</h3>
+                    <p class="text-gray-400 leading-relaxed mb-6">Dedicated deadlift platforms and Olympic racks.</p>
+                    <div class="w-12 h-1 bg-gradient-to-r from-orange-500 to-red-600 rounded-full group-hover:w-full transition-all duration-500"></div>
+                </div>
+                <!-- Service 3 -->
+                <div class="glass-card p-8 rounded-2xl group bg-black/40 relative overflow-hidden">
+                    <div class="w-16 h-16 rounded-full bg-orange-600/20 flex items-center justify-center text-orange-400 mb-6 group-hover:scale-110 transition-all duration-300">
+                        <i data-lucide="activity" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Cardio & HIIT</h3>
+                    <p class="text-gray-400 leading-relaxed mb-6">Burn fat fast with high-intensity intervals.</p>
+                    <div class="w-12 h-1 bg-gradient-to-r from-orange-500 to-red-600 rounded-full group-hover:w-full transition-all duration-500"></div>
+                </div>
+                <!-- Service 4 -->
+                <div class="glass-card p-8 rounded-2xl group bg-black/40 relative overflow-hidden">
+                    <div class="w-16 h-16 rounded-full bg-orange-600/20 flex items-center justify-center text-orange-400 mb-6 group-hover:scale-110 transition-all duration-300">
+                        <i data-lucide="file-text" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Desi Diet Plans</h3>
+                    <p class="text-gray-400 leading-relaxed mb-6">Nutrition customized for Indian dietary habits.</p>
+                    <div class="w-12 h-1 bg-gradient-to-r from-orange-500 to-red-600 rounded-full group-hover:w-full transition-all duration-500"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Trainers Section (Only Ajay Bhai) -->
+        <section id="trainers" class="px-6 md:px-20 py-20 reveal-on-scroll">
+            <div class="text-center mb-16 px-4">
+                <h2 class="text-4xl md:text-6xl font-black italic uppercase text-gradient bg-gradient-to-r from-orange-400 via-white to-green-400 mb-6 drop-shadow-lg">The Bulls Squad</h2>
+                <p class="text-gray-300 max-w-2xl mx-auto text-lg tracking-wide">Expert coaches to guide your journey.</p>
+            </div>
+            <div class="flex justify-center">
+                <div class="relative group rounded-2xl overflow-hidden bg-gray-900 border border-white/5 hover:border-orange-500/50 transition-colors w-full max-w-md">
+                    <div class="h-96 w-full bg-gradient-to-br from-orange-500 to-red-600 opacity-80 group-hover:opacity-100 transition-opacity relative">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <img src="hero.png"></img>
+                        </div>
+                        <div class="absolute top-4 right-4 bg-black/60 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-white border border-white/10">
+                            Exp: 10+ Years
+                        </div>
+                    </div>
+                    <div class="p-8 relative bg-[#0a0a0a]">
+                        <div class="-mt-14 mb-6 relative z-10">
+                            <button class="bg-white text-black p-4 rounded-full shadow-lg hover:bg-orange-500 hover:text-white transition-colors">
+                                <i data-lucide="crown" class="w-6 h-6"></i>
+                            </button>
+                        </div>
+                        <h3 class="text-3xl font-bold text-white mb-2">Ajay Bhai</h3>
+                        <p class="text-orange-500 font-bold text-base mb-4 uppercase tracking-wider">Head Coach</p>
+                        <p class="text-gray-400 mb-6">Bodybuilding & Strength</p>
+                        <div class="flex gap-6 justify-center mt-6">
+                            <i data-lucide="instagram" class="w-6 h-6 text-gray-500 hover:text-white cursor-pointer"></i>
+                            <i data-lucide="twitter" class="w-6 h-6 text-gray-500 hover:text-white cursor-pointer"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section id="pricing" class="px-6 md:px-20 py-20 reveal-on-scroll">
+            <div class="text-center mb-16 px-4">
+                <h2 class="text-4xl md:text-6xl font-black italic uppercase text-gradient bg-gradient-to-r from-orange-400 via-white to-green-400 mb-6 drop-shadow-lg">Membership Plans</h2>
+                <p class="text-gray-300 max-w-2xl mx-auto text-lg tracking-wide">Affordable plans. No hidden charges.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center max-w-6xl mx-auto">
+                <!-- Silver -->
+                <div class="glass-card p-10 rounded-2xl relative">
+                    <h3 class="text-xl font-bold text-gray-300 uppercase tracking-widest mb-4">Silver</h3>
+                    <div class="flex items-baseline mb-8">
+                        <span class="text-5xl font-black text-white">₹1,499</span>
+                        <span class="text-gray-500 ml-2">/month</span>
+                    </div>
+                    <ul class="space-y-4 mb-10 text-gray-300 text-sm">
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-3"></i> Gym Floor Access</li>
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-3"></i> Locker Access</li>
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-3"></i> General Trainer Support</li>
+                    </ul>
+                    <button class="w-full py-4 text-sm font-bold uppercase rounded-full border border-white/20 hover:bg-white/10 transition-colors">Join Now</button>
+                </div>
+                <!-- Gold -->
+                <div class="glass-card p-10 rounded-2xl relative bg-gradient-to-b from-orange-900/20 to-red-900/20 border-orange-500/50 transform md:-translate-y-4 shadow-xl z-10">
+                    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-orange-500 to-red-600 text-white text-xs font-black uppercase py-1 px-4 rounded-full tracking-widest shadow-lg">Most Popular</div>
+                    <h3 class="text-xl font-bold text-gray-300 uppercase tracking-widest mb-4">Gold</h3>
+                    <div class="flex items-baseline mb-8">
+                        <span class="text-5xl font-black text-white">₹2,999</span>
+                        <span class="text-gray-500 ml-2">/month</span>
+                    </div>
+                    <ul class="space-y-4 mb-10 text-gray-300 text-sm">
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-3"></i> 24/7 Access</li>
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-3"></i> Group Classes (Zumba/Yoga)</li>
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-3"></i> Steam Bath</li>
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-3"></i> Diet Consultation</li>
+                    </ul>
+                    <button class="w-full py-4 text-sm font-bold uppercase rounded-full bg-gradient-to-r from-orange-500 to-red-600 text-white shadow-lg">Join Now</button>
+                </div>
+                <!-- Diamond -->
+                <div class="glass-card p-10 rounded-2xl relative">
+                    <h3 class="text-xl font-bold text-gray-300 uppercase tracking-widest mb-4">Diamond</h3>
+                    <div class="flex items-baseline mb-8">
+                        <span class="text-5xl font-black text-white">₹4,999</span>
+                        <span class="text-gray-500 ml-2">/month</span>
+                    </div>
+                    <ul class="space-y-4 mb-10 text-gray-300 text-sm">
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-3"></i> All Gold Features</li>
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-3"></i> 12 Personal Training Sessions</li>
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-3"></i> Supplements Guide</li>
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-3"></i> Massage Therapy</li>
+                    </ul>
+                    <button class="w-full py-4 text-sm font-bold uppercase rounded-full border border-white/20 hover:bg-white/10 transition-colors">Join Now</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Schedule Section -->
+        <section id="schedule" class="px-6 md:px-20 py-20 bg-white/5 reveal-on-scroll">
+            <div class="text-center mb-16 px-4">
+                <h2 class="text-4xl md:text-6xl font-black italic uppercase text-gradient bg-gradient-to-r from-orange-400 via-white to-green-400 mb-6 drop-shadow-lg">Weekly Schedule</h2>
+                <p class="text-gray-300 max-w-2xl mx-auto text-lg tracking-wide">Weekly workout split for maximum gains.</p>
+            </div>
+            <div class="overflow-x-auto rounded-3xl border border-white/10 bg-black/40 backdrop-blur-sm max-w-4xl mx-auto">
+                <table class="w-full text-left border-collapse min-w-[600px]">
+                    <thead>
+                        <tr class="bg-white/5 text-orange-400 uppercase text-sm tracking-wider">
+                            <th class="p-6 font-bold w-1/3">Day</th>
+                            <th class="p-6 font-bold">Workout Focus</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-white">
+                        <tr class="border-t border-white/5 hover:bg-white/5 transition-colors">
+                            <td class="p-6 font-bold text-lg group-hover:text-orange-400">Monday</td>
+                            <td class="p-6 text-gray-300 font-medium text-lg flex items-center gap-3"><i data-lucide="dumbbell" class="text-orange-500 w-5 h-5"></i> Shoulders & Delts</td>
+                        </tr>
+                        <tr class="border-t border-white/5 hover:bg-white/5 transition-colors">
+                            <td class="p-6 font-bold text-lg">Tuesday</td>
+                            <td class="p-6 text-gray-300 font-medium text-lg flex items-center gap-3"><i data-lucide="dumbbell" class="text-orange-500 w-5 h-5"></i> Back Width & Thickness</td>
+                        </tr>
+                        <tr class="border-t border-white/5 hover:bg-white/5 transition-colors">
+                            <td class="p-6 font-bold text-lg">Wednesday</td>
+                            <td class="p-6 text-gray-300 font-medium text-lg flex items-center gap-3"><i data-lucide="dumbbell" class="text-orange-500 w-5 h-5"></i> Chest & Pecs</td>
+                        </tr>
+                        <tr class="border-t border-white/5 hover:bg-white/5 transition-colors">
+                            <td class="p-6 font-bold text-lg">Thursday</td>
+                            <td class="p-6 text-gray-300 font-medium text-lg flex items-center gap-3"><i data-lucide="dumbbell" class="text-orange-500 w-5 h-5"></i> Arms (Biceps & Triceps)</td>
+                        </tr>
+                        <tr class="border-t border-white/5 hover:bg-white/5 transition-colors">
+                            <td class="p-6 font-bold text-lg">Friday</td>
+                            <td class="p-6 text-gray-300 font-medium text-lg flex items-center gap-3"><i data-lucide="dumbbell" class="text-orange-500 w-5 h-5"></i> Legs (Quads & Hamstrings)</td>
+                        </tr>
+                        <tr class="border-t border-white/5 hover:bg-white/5 transition-colors">
+                            <td class="p-6 font-bold text-lg">Saturday</td>
+                            <td class="p-6 text-gray-300 font-medium text-lg flex items-center gap-3"><i data-lucide="dumbbell" class="text-orange-500 w-5 h-5"></i> Abs, Core & Cardio</td>
+                        </tr>
+                        <tr class="border-t border-white/5 hover:bg-white/5 transition-colors">
+                            <td class="p-6 font-bold text-lg">Sunday</td>
+                            <td class="p-6 text-gray-300 font-medium text-lg flex items-center gap-3"><i data-lucide="coffee" class="text-orange-500 w-5 h-5"></i> Rest Day / Recovery</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Gallery Section -->
+        <section id="gallery" class="px-6 md:px-20 py-20 reveal-on-scroll">
+            <div class="text-center mb-16 px-4">
+                <h2 class="text-4xl md:text-6xl font-black italic uppercase text-gradient bg-gradient-to-r from-orange-400 via-white to-green-400 mb-6 drop-shadow-lg">The Arena</h2>
+                <p class="text-gray-300 max-w-2xl mx-auto text-lg tracking-wide">Where sweat turns into strength.</p>
+            </div>
+            <div class="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
+                <div class="break-inside-avoid relative group rounded-2xl overflow-hidden cursor-zoom-in">
+                    <div class="w-full h-64 bg-gradient-to-br from-orange-900 to-gray-900 opacity-80 group-hover:opacity-100 transition-all duration-500 transform group-hover:scale-105"></div>
+                    <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"><i data-lucide="camera" class="text-white w-10 h-10"></i></div>
+                </div>
+                <div class="break-inside-avoid relative group rounded-2xl overflow-hidden cursor-zoom-in">
+                    <div class="w-full h-96 bg-gradient-to-bl from-green-900 to-gray-900 opacity-80 group-hover:opacity-100 transition-all duration-500 transform group-hover:scale-105"></div>
+                    <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"><i data-lucide="camera" class="text-white w-10 h-10"></i></div>
+                </div>
+                <div class="break-inside-avoid relative group rounded-2xl overflow-hidden cursor-zoom-in">
+                    <div class="w-full h-64 bg-gradient-to-tr from-blue-900 to-gray-900 opacity-80 group-hover:opacity-100 transition-all duration-500 transform group-hover:scale-105"></div>
+                    <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"><i data-lucide="camera" class="text-white w-10 h-10"></i></div>
+                </div>
+                <!-- Add more as needed -->
+            </div>
+        </section>
+
+        <!-- BMI Calculator -->
+        <section id="bmi" class="px-6 md:px-20 py-20 bg-white/5 reveal-on-scroll">
+            <div class="text-center mb-16 px-4">
+                <h2 class="text-4xl md:text-6xl font-black italic uppercase text-gradient bg-gradient-to-r from-orange-400 via-white to-green-400 mb-6 drop-shadow-lg">Check Your BMI</h2>
+                <p class="text-gray-300 max-w-2xl mx-auto text-lg tracking-wide">Know where you stand.</p>
+            </div>
+            <div class="w-full max-w-4xl grid md:grid-cols-2 gap-12 items-center mx-auto">
+                <div class="order-2 md:order-1 glass-card p-8 rounded-2xl">
+                    <form onsubmit="calculateBMI(event)" class="space-y-6">
+                        <div>
+                            <label class="text-xs uppercase font-bold text-orange-400 tracking-widest mb-2 block">Height (cm)</label>
+                            <input type="number" id="bmi-height" class="w-full bg-black/40 border border-white/10 rounded-xl p-4 text-white focus:border-orange-500 focus:outline-none transition-colors" placeholder="175">
+                        </div>
+                        <div>
+                            <label class="text-xs uppercase font-bold text-orange-400 tracking-widest mb-2 block">Weight (kg)</label>
+                            <input type="number" id="bmi-weight" class="w-full bg-black/40 border border-white/10 rounded-xl p-4 text-white focus:border-orange-500 focus:outline-none transition-colors" placeholder="70">
+                        </div>
+                        <button type="submit" class="w-full py-3 rounded-full font-bold uppercase tracking-wider bg-gradient-to-r from-orange-500 to-red-600 text-white hover:shadow-orange-500/40">Calculate</button>
+                    </form>
+                </div>
+                <div class="order-1 md:order-2 flex flex-col items-center justify-center text-center">
+                    <div id="bmi-result-area" class="hidden">
+                        <span id="bmi-value" class="text-6xl font-black text-white block mb-2"></span>
+                        <span class="text-gray-500 uppercase text-xs block mb-4">BMI Score</span>
+                        <h4 id="bmi-status" class="text-2xl font-bold"></h4>
+                    </div>
+                    <!-- Default Placeholder -->
+                    <div id="bmi-placeholder">
+                        <i data-lucide="calculator" class="w-32 h-32 text-gray-700 opacity-50"></i>
+                        <p class="text-gray-500 mt-4">Enter details to see result</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="px-6 md:px-20 py-20 reveal-on-scroll">
+            <div class="text-center mb-16 px-4">
+                <h2 class="text-4xl md:text-6xl font-black italic uppercase text-gradient bg-gradient-to-r from-orange-400 via-white to-green-400 mb-6 drop-shadow-lg">Visit Us</h2>
+                <p class="text-gray-300 max-w-2xl mx-auto text-lg tracking-wide">Start your journey today.</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-12">
+                <div class="space-y-8">
+                    <div class="glass-card p-6 rounded-2xl flex items-start gap-4">
+                        <div class="p-3 bg-orange-500/20 rounded-lg text-orange-400"><i data-lucide="map-pin"></i></div>
+                        <div><h4 class="font-bold text-lg text-white">Address</h4><p class="text-gray-400">Plot 45, Sector 18, Cyber City, Gurgaon</p></div>
+                    </div>
+                    <div class="glass-card p-6 rounded-2xl flex items-start gap-4">
+                        <div class="p-3 bg-green-500/20 rounded-lg text-green-400"><i data-lucide="phone"></i></div>
+                        <div><h4 class="font-bold text-lg text-white">Call Us</h4><p class="text-gray-400">+91 95104 67282</p></div>
+                    </div>
+                    <div class="flex gap-4 pt-4">
+                        <div class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-orange-600 transition-all cursor-pointer text-gray-400"><i data-lucide="facebook"></i></div>
+                        <div class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-orange-600 transition-all cursor-pointer text-gray-400"><i data-lucide="instagram"></i></div>
+                        <div class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-orange-600 transition-all cursor-pointer text-gray-400"><i data-lucide="twitter"></i></div>
+                    </div>
+                </div>
+                
+                <div class="glass-card p-8 rounded-2xl">
+                    <form onsubmit="sendWhatsApp(event)" class="space-y-6">
+                        <h3 class="text-2xl font-bold mb-4 flex items-center gap-2">
+                            <i data-lucide="message-circle" class="text-green-500"></i> WhatsApp Inquiry
+                        </h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <input required id="wa-name" type="text" placeholder="Name" class="bg-black/40 border border-white/10 rounded-lg p-3 text-white focus:border-orange-500 focus:outline-none">
+                            <input required id="wa-mobile" type="text" placeholder="Mobile Number" class="bg-black/40 border border-white/10 rounded-lg p-3 text-white focus:border-orange-500 focus:outline-none">
+                        </div>
+                        <textarea id="wa-message" rows="4" placeholder="Message (Optional)..." class="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-white focus:border-orange-500 focus:outline-none"></textarea>
+                        <button class="w-full py-3 rounded-full font-bold flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white transition-colors">
+                            <i data-lucide="message-circle" class="w-5 h-5"></i> Send WhatsApp Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black border-t border-white/10 pt-20 pb-10 px-6 mt-20">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+            <div class="md:col-span-2">
+                <h2 class="text-3xl font-black italic tracking-tighter mb-6">BULLS <span class="text-orange-500">FITNESS</span></h2>
+                <p class="text-gray-400 max-w-sm mb-8 leading-relaxed">
+                    India's most premium fitness destination. Join the revolution and transform your body with the best in the industry.
+                </p>
+                <div class="flex gap-4">
+                    <div class="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center hover:bg-orange-600 transition-colors cursor-pointer"><i data-lucide="instagram" class="w-5 h-5"></i></div>
+                    <div class="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center hover:bg-blue-600 transition-colors cursor-pointer"><i data-lucide="facebook" class="w-5 h-5"></i></div>
+                </div>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-6 uppercase tracking-widest text-sm">Explore</h4>
+                <ul class="space-y-4 text-gray-500 text-sm">
+                    <li class="hover:text-orange-500 cursor-pointer" onclick="scrollToSection('modules')">Modules</li>
+                    <li class="hover:text-orange-500 cursor-pointer" onclick="scrollToSection('pricing')">Membership</li>
+                    <li class="hover:text-orange-500 cursor-pointer" onclick="scrollToSection('trainers')">Trainers</li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-6 uppercase tracking-widest text-sm">Contact</h4>
+                <ul class="space-y-4 text-gray-500 text-sm">
+                    <li class="flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4"></i> Sector 18, Gurgaon</li>
+                    <li class="flex items-center gap-2"><i data-lucide="phone" class="w-4 h-4"></i> +91 95104 67282</li>
+                    <li class="flex items-center gap-2"><i data-lucide="mail" class="w-4 h-4"></i> info@bullsfitness.in</li>
+                </ul>
+            </div>
+        </div>
+        <div class="border-t border-white/5 pt-8 text-center text-gray-600 text-xs uppercase tracking-widest">
+            &copy; 2024 Bulls Fitness India. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        // --- Navigation Logic ---
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            if(element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+                // Close mobile menu if open
+                document.getElementById('mobile-menu').classList.add('translate-x-full');
+            }
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('translate-x-full');
+        }
+
+        // Navbar Styling on Scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.classList.add('bg-black/80', 'backdrop-blur-lg', 'border-b', 'border-white/10', 'shadow-lg');
+                nav.classList.remove('py-6');
+                nav.classList.add('py-3');
+            } else {
+                nav.classList.remove('bg-black/80', 'backdrop-blur-lg', 'border-b', 'border-white/10', 'shadow-lg');
+                nav.classList.remove('py-3');
+                nav.classList.add('py-6');
+            }
+            
+            // Highlight active link
+            const sections = ['home', 'about', 'modules', 'pricing', 'schedule', 'contact'];
+            sections.forEach(section => {
+                const el = document.getElementById(section);
+                if (el) {
+                    const rect = el.getBoundingClientRect();
+                    const btn = document.querySelector(`button[onclick="scrollToSection('${section}')"]`);
+                    if (rect.top >= 0 && rect.top <= 300) {
+                         if(btn) {
+                             document.querySelectorAll('.nav-btn').forEach(b => {
+                                 b.classList.remove('bg-orange-600', 'text-white', 'shadow-lg');
+                                 b.classList.add('text-gray-400');
+                             });
+                             btn.classList.add('bg-orange-600', 'text-white', 'shadow-lg');
+                             btn.classList.remove('text-gray-400');
+                         }
+                    }
+                }
+            });
+        });
+
+        // --- Scroll Reveal Animation ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
+
+        // --- BMI Calculator ---
+        function calculateBMI(e) {
+            e.preventDefault();
+            const h = document.getElementById('bmi-height').value;
+            const w = document.getElementById('bmi-weight').value;
+            
+            if (h && w) {
+                const heightInM = h / 100;
+                const bmi = (w / (heightInM * heightInM)).toFixed(1);
+                
+                const resultArea = document.getElementById('bmi-result-area');
+                const placeholder = document.getElementById('bmi-placeholder');
+                const valEl = document.getElementById('bmi-value');
+                const statusEl = document.getElementById('bmi-status');
+                
+                placeholder.classList.add('hidden');
+                resultArea.classList.remove('hidden');
+                
+                valEl.innerText = bmi;
+                
+                if (bmi < 18.5) {
+                    statusEl.innerText = "Underweight";
+                    statusEl.className = "text-2xl font-bold text-yellow-400";
+                } else if (bmi < 25) {
+                    statusEl.innerText = "Fit / Healthy";
+                    statusEl.className = "text-2xl font-bold text-green-400";
+                } else if (bmi < 30) {
+                    statusEl.innerText = "Overweight";
+                    statusEl.className = "text-2xl font-bold text-orange-400";
+                } else {
+                    statusEl.innerText = "Obese";
+                    statusEl.className = "text-2xl font-bold text-red-500";
+                }
+            }
+        }
+
+        // --- WhatsApp Integration ---
+        function sendWhatsApp(e) {
+            e.preventDefault();
+            const name = document.getElementById('wa-name').value;
+            const mobile = document.getElementById('wa-mobile').value;
+            const message = document.getElementById('wa-message').value;
+
+            if(!name || !mobile) {
+                alert("Please fill in Name and Mobile Number");
+                return;
+            }
+
+            const waMessage = `Hello Bulls Fitness,%0A%0AMy Name: ${name}%0AContact: ${mobile}%0AMessage: ${message || "I am interested in joining."}%0A%0APlease get back to me.`;
+            const url = `https://wa.me/919510467282?text=${waMessage}`;
+            window.open(url, '_blank');
+        }
+
+        // --- Three.js Background ---
+        (function initThreeJS() {
+            const container = document.getElementById('canvas-container');
+            if (!container) return;
+
+            const scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x050505, 0.05);
+
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 8;
+
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+
+            // Particles
+            const particlesGeo = new THREE.BufferGeometry();
+            const particlesCount = 700;
+            const posArray = new Float32Array(particlesCount * 3);
+            for(let i = 0; i < particlesCount * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 35;
+            }
+            particlesGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            const particlesMat = new THREE.PointsMaterial({
+                size: 0.03,
+                color: 0xFF9933,
+                transparent: true,
+                opacity: 0.6
+            });
+            const particlesMesh = new THREE.Points(particlesGeo, particlesMat);
+            scene.add(particlesMesh);
+
+            // Floating Shapes
+            const shapes = [];
+            const geo = new THREE.IcosahedronGeometry(1, 0);
+            const mat = new THREE.MeshPhongMaterial({ color: 0x138808, wireframe: true });
+
+            for (let i = 0; i < 5; i++) {
+                const mesh = new THREE.Mesh(geo, mat);
+                mesh.position.set(
+                    (Math.random() - 0.5) * 20,
+                    (Math.random() - 0.5) * 20,
+                    (Math.random() - 0.5) * 15
+                );
+                mesh.scale.setScalar(Math.random() * 2 + 0.5);
+                scene.add(mesh);
+                shapes.push({ mesh, speedX: Math.random() * 0.005, speedY: Math.random() * 0.005 });
+            }
+
+            // Lights
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+            scene.add(ambientLight);
+            const pointLight = new THREE.PointLight(0xFF9933, 1);
+            pointLight.position.set(5, 5, 5);
+            scene.add(pointLight);
+
+            // Mouse Move
+            let mouseX = 0, mouseY = 0;
+            document.addEventListener('mousemove', (event) => {
+                mouseX = event.clientX / window.innerWidth - 0.5;
+                mouseY = event.clientY / window.innerHeight - 0.5;
+            });
+
+            // Resize
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+
+            // Animate
+            function animate() {
+                requestAnimationFrame(animate);
+                particlesMesh.rotation.y += 0.0005;
+                
+                shapes.forEach(item => {
+                    item.mesh.rotation.x += item.speedX;
+                    item.mesh.rotation.y += item.speedY;
+                });
+
+                camera.position.x += (mouseX * 1 - camera.position.x) * 0.05;
+                camera.position.y += (-mouseY * 1 - camera.position.y) * 0.05;
+                camera.lookAt(scene.position);
+
+                renderer.render(scene, camera);
+            }
+            animate();
+        })();
+    </script>
+</body>
+</html>
