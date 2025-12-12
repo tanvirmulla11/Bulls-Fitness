@@ -122,9 +122,6 @@ bg-orange-600
 from-orange-500
 to-red-600
 ```
-### 🖼 Replace Gym Images
-
-Place your images inside the /Images directory.
 
 ### 📦 Add New Training Modules
 
@@ -135,7 +132,6 @@ Copy this card template inside the Modules section:
   <p class="text-gray-400">Description here...</p>
 </div>
 ```
-### 🧪 Core Functionalities
 ### ✔ Scroll-based animations
 
 Intersection Observer used for smooth section reveals.
