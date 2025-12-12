@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bulls Fitness </title>
+    <title>Bulls Fitness India</title>
+    
     <!-- Tailwind CSS for Styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -215,7 +216,7 @@
                         <div class="relative w-64 h-80 md:w-80 md:h-96">
                             <div class="absolute inset-0 bg-gradient-to-tr from-orange-500 to-red-600 rounded-3xl transform rotate-6 opacity-80"></div>
                             <div class="absolute inset-0 bg-gray-800 rounded-3xl border-2 border-white/20 overflow-hidden flex items-end justify-center">
-                                <img src="Images/Hero1.jpg" alt="Ajay Bhai" class="object-cover h-full w-full">
+                                <img src="hero2.png" alt="Ajay Bhai" class="object-cover h-full w-full">
                                 <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
                                 <div class="absolute bottom-4 text-center w-full">
                                     <p class="text-white font-bold text-xl uppercase tracking-widest">Ajay Bhai</p>
@@ -320,10 +321,10 @@
                 <div class="relative group rounded-2xl overflow-hidden bg-gray-900 border border-white/5 hover:border-orange-500/50 transition-colors w-full max-w-md">
                     <div class="h-96 w-full bg-gradient-to-br from-orange-500 to-red-600 opacity-80 group-hover:opacity-100 transition-opacity relative">
                         <div class="absolute inset-0 flex items-center justify-center">
-                            <img src="/Images/Body.jpg" alt="Ajay Bhai" class="object-cover h-full w-full">
+                            <img src="hero.png" alt="Ajay Bhai" class="object-cover h-full w-full">
                         </div>
                         <div class="absolute top-4 right-4 bg-black/60 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-white border border-white/10">
-                            Exp: 12+ Years
+                            Exp: 10+ Years
                         </div>
                     </div>
                     <div class="p-8 relative bg-[#0a0a0a]">
@@ -338,7 +339,7 @@
                         <div class="flex gap-6 justify-center mt-6">
                             <a href="https://instagram.com/bulls_fitness_point" target="_blank"><i data-lucide="instagram" class="w-6 h-6 text-gray-500 hover:text-white cursor-pointer"></i></a>
                             <a href="https://youtube.com/@Gymfitnesspoint2024" target="_blank"><i data-lucide="youtube" class="w-6 h-6 text-gray-500 hover:text-white cursor-pointer"></i></a>
-                            <a href="#" class="flex items-center gap-1 text-gray-500 hover:text-blue-500 transition-colors">
+                            <a href="https://www.facebook.com/search/people/?q=Ajay%20Beladiya" target="_blank" class="flex items-center gap-1 text-gray-500 hover:text-blue-500 transition-colors">
                                 <i data-lucide="facebook" class="w-6 h-6"></i>
                             </a>
                         </div>
@@ -366,7 +367,7 @@
                         <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-3"></i> Gym Floor Access</li>
                         <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-3"></i> General Guidance</li>
                     </ul>
-                    <button class="w-full py-3 text-sm font-bold uppercase rounded-full border border-white/20 hover:bg-white/10 transition-colors">Join Now</button>
+                    <button onclick="joinPlan('Monthly', '₹900')" class="w-full py-3 text-sm font-bold uppercase rounded-full border border-white/20 hover:bg-white/10 transition-colors">Join Now</button>
                 </div>
 
                 <!-- 3 Month -->
@@ -380,7 +381,7 @@
                         <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-3"></i> All Monthly Features</li>
                         <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-3"></i> Save ₹300</li>
                     </ul>
-                    <button class="w-full py-3 text-sm font-bold uppercase rounded-full border border-white/20 hover:bg-white/10 transition-colors">Join Now</button>
+                    <button onclick="joinPlan('Quarterly', '₹2,400')" class="w-full py-3 text-sm font-bold uppercase rounded-full border border-white/20 hover:bg-white/10 transition-colors">Join Now</button>
                 </div>
 
                 <!-- 6 Month -->
@@ -389,14 +390,14 @@
                     <h3 class="text-xl font-bold text-gray-300 uppercase tracking-widest mb-4">Half Yearly</h3>
                     <div class="flex items-baseline mb-6">
                         <span class="text-4xl font-black text-white">₹4,400</span>
-                        <span class="text-gray-500 ml-2">/6months</span>
+                        <span class="text-gray-500 ml-2">/6 months</span>
                     </div>
                     <ul class="space-y-4 mb-8 text-gray-300 text-sm">
                         <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-3"></i> Diet Consultation</li>
                         <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-3"></i> Steam Bath Access</li>
                         <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-3"></i> Save ₹1,000</li>
                     </ul>
-                    <button class="w-full py-3 text-sm font-bold uppercase rounded-full bg-gradient-to-r from-orange-500 to-red-600 text-white shadow-lg">Join Now</button>
+                    <button onclick="joinPlan('Half Yearly', '₹4,400')" class="w-full py-3 text-sm font-bold uppercase rounded-full bg-gradient-to-r from-orange-500 to-red-600 text-white shadow-lg">Join Now</button>
                 </div>
 
                 <!-- 12 Month -->
@@ -404,14 +405,14 @@
                     <h3 class="text-xl font-bold text-gray-300 uppercase tracking-widest mb-4">Yearly</h3>
                     <div class="flex items-baseline mb-6">
                         <span class="text-4xl font-black text-white">₹7,500</span>
-                        <span class="text-gray-500 ml-2">/12months</span>
+                        <span class="text-gray-500 ml-2">/12 months</span>
                     </div>
                     <ul class="space-y-4 mb-8 text-gray-300 text-sm">
                         <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-3"></i> Best Value Plan</li>
                         <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-3"></i> Personal Training Session</li>
                         <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-3"></i> Save ₹3,300</li>
                     </ul>
-                    <button class="w-full py-3 text-sm font-bold uppercase rounded-full border border-white/20 hover:bg-white/10 transition-colors">Join Now</button>
+                    <button onclick="joinPlan('Yearly', '₹7,500')" class="w-full py-3 text-sm font-bold uppercase rounded-full border border-white/20 hover:bg-white/10 transition-colors">Join Now</button>
                 </div>
             </div>
 
@@ -480,37 +481,37 @@
             <div id="gallery-grid" class="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
                 <!-- Visible Items -->
                 <div class="break-inside-avoid relative group rounded-2xl overflow-hidden cursor-zoom-in">
-                    <img src="Images/Image1.jpg" alt="Gym" class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-500">
+                    <img src="WhatsApp Image 2025-12-02 at 18.17.19_0535d83f.jpg" alt="Gym" class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-500">
                     <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"><i data-lucide="camera" class="text-white w-10 h-10"></i></div>
                 </div>
                 <div class="break-inside-avoid relative group rounded-2xl overflow-hidden cursor-zoom-in">
-                    <img src="Images/Image2.jpg" alt="Gym" class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-500">
+                    <img src="WhatsApp Image 2025-12-02 at 18.17.20_cac8f61a.jpg" alt="Gym" class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-500">
                     <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"><i data-lucide="camera" class="text-white w-10 h-10"></i></div>
                 </div>
                 <div class="break-inside-avoid relative group rounded-2xl overflow-hidden cursor-zoom-in">
-                    <img src="Images/Image3.jpg" alt="Gym" class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-500">
+                    <img src="WhatsApp Image 2025-12-02 at 18.17.21_3a1ae7e7.jpg" alt="Gym" class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-500">
                     <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"><i data-lucide="camera" class="text-white w-10 h-10"></i></div>
                 </div>
                 
                 <!-- Hidden Items -->
                 <div class="hidden-gallery-item break-inside-avoid relative group rounded-2xl overflow-hidden cursor-zoom-in">
-                    <img src="Images/Image4.jpg" alt="Gym" class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-500">
+                    <img src="WhatsApp Image 2025-12-02 at 18.17.21_d448e83b.jpg" alt="Gym" class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-500">
                     <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"><i data-lucide="camera" class="text-white w-10 h-10"></i></div>
                 </div>
                 <div class="hidden-gallery-item break-inside-avoid relative group rounded-2xl overflow-hidden cursor-zoom-in">
-                    <img src="Images/Image5.jpg"Gym" class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-500">
+                    <img src="WhatsApp Image 2025-12-02 at 18.17.20_0e5fa87c.jpg" alt="Gym" class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-500">
                     <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"><i data-lucide="camera" class="text-white w-10 h-10"></i></div>
                 </div>
                 <div class="hidden-gallery-item break-inside-avoid relative group rounded-2xl overflow-hidden cursor-zoom-in">
-                    <img src="Images/Image6.jpg" alt="Gym" class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-500">
+                    <img src="WhatsApp Image 2025-12-02 at 18.17.20_ec21e1de.jpg" alt="Gym" class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-500">
                     <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"><i data-lucide="camera" class="text-white w-10 h-10"></i></div>
                 </div>
                 <div class="hidden-gallery-item break-inside-avoid relative group rounded-2xl overflow-hidden cursor-zoom-in">
-                    <img src="Images/Image7.jpg" alt="Gym" class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-500">
+                    <img src="WhatsApp Image 2025-12-02 at 18.17.21_0de09cf1.jpg" alt="Gym" class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-500">
                     <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"><i data-lucide="camera" class="text-white w-10 h-10"></i></div>
                 </div>
                 <div class="hidden-gallery-item break-inside-avoid relative group rounded-2xl overflow-hidden cursor-zoom-in">
-                    <img src="Images/Image8.jpg" alt="Gym" class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-500">
+                    <img src="WhatsApp Image 2025-12-02 at 18.17.19_19e7101b.jpg" alt="Gym" class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-500">
                     <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"><i data-lucide="camera" class="text-white w-10 h-10"></i></div>
                 </div>
             </div>
@@ -579,7 +580,7 @@
                         <a href="https://instagram.com/bulls_fitness_point" target="_blank" class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-orange-600 transition-all cursor-pointer text-gray-400"><i data-lucide="instagram"></i></a>
                         <a href="https://youtube.com/@Gymfitnesspoint2024" target="_blank" class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-red-600 transition-all cursor-pointer text-gray-400"><i data-lucide="youtube"></i></a>
                         <!-- Facebook Link -->
-                         <a href="#" class="h-12 px-4 rounded-full border border-white/10 flex items-center justify-center gap-2 hover:bg-blue-600 transition-all cursor-pointer text-gray-400 hover:text-white group">
+                         <a href="https://www.facebook.com/search/people/?q=Ajay%20Beladiya" target="_blank" class="h-12 px-4 rounded-full border border-white/10 flex items-center justify-center gap-2 hover:bg-blue-600 transition-all cursor-pointer text-gray-400 hover:text-white group">
                             <i data-lucide="facebook"></i>
                             <span class="text-xs group-hover:text-white">Ajay Beladiya</span>
                         </a>
@@ -617,7 +618,7 @@
                 <div class="flex gap-4">
                     <a href="https://instagram.com/bulls_fitness_point" target="_blank" class="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center hover:bg-orange-600 transition-colors cursor-pointer"><i data-lucide="instagram" class="w-5 h-5"></i></a>
                     <a href="https://youtube.com/@Gymfitnesspoint2024" target="_blank" class="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center hover:bg-red-600 transition-colors cursor-pointer"><i data-lucide="youtube" class="w-5 h-5"></i></a>
-                    <a href="#" class="px-3 h-10 bg-white/5 rounded-lg flex items-center justify-center gap-2 hover:bg-blue-600 transition-colors cursor-pointer text-gray-400 hover:text-white">
+                    <a href="https://www.facebook.com/search/people/?q=Ajay%20Beladiya" target="_blank" class="px-3 h-10 bg-white/5 rounded-lg flex items-center justify-center gap-2 hover:bg-blue-600 transition-colors cursor-pointer text-gray-400 hover:text-white">
                         <i data-lucide="facebook" class="w-5 h-5"></i>
                         <span class="text-xs">Ajay Beladiya</span>
                     </a>
@@ -649,6 +650,13 @@
     <script>
         // Initialize Icons
         lucide.createIcons();
+
+        // --- Join Plan Function (WhatsApp) ---
+        function joinPlan(plan, price) {
+            const mobile = "919904253259";
+            const text = `Hello, I want to join the ${plan} plan at ${price}. Please guide me.`;
+            window.open(`https://wa.me/${mobile}?text=${encodeURIComponent(text)}`, '_blank');
+        }
 
         // --- Gallery Toggle ---
         function toggleGallery() {
