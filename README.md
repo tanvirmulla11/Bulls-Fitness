@@ -6,9 +6,7 @@ Designed with a modern UI, smooth animations, and a 3D interactive background to
 ---
 
 ## 🚀 Live Demo
-👉 *(Add your deployed link here)*  
-Example: https://your-domain.com/bulls-fitness-india
-
+https://bullsfitnessgym.netlify.app/
 ---
 
 # 🎨 Project Overview
